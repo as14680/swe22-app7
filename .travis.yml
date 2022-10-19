@@ -1,0 +1,22 @@
+language: python
+
+python:
+  - 3.9.6
+
+install:
+  - pip install -r requirements.txt
+  - pip install black
+  - pip install flake8
+  - pip install coverage
+
+before_script:
+  - python manage.py makemigrations
+  - python manage.py migrate
+
+script:
+  - python -m black . --check
+  - python -m flake8 . --ignore=E302,E501,E301,W293,E302,W291,F401,E231 --max-line-length=88
+  - python -m coverage run --source='.' manage.py test
+
+after_success:
+  - python -m coveralls
